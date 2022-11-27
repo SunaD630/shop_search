@@ -1,0 +1,6 @@
+version: "3"
+services:
+  shop_search_container:
+    image: shop_search
+    ports: 
+      - "3000:8080"
