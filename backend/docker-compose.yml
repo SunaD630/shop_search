@@ -1,6 +1,38 @@
 version: "3"
 services:
-  shop_search_container:
-    image: shop_search
+  api:
+    build: ./api
+    volumes:
+      - ./:/backend
+      - /api/node_modules
+    environment:
+      - MYSQL_ROOT_HOST=${DB_ROOT_HOST}
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_ROOT_PASSWORD=${DB_PASS}
+      - TZ=${TZ}
     ports: 
       - "3000:8080"
+    depends_on: # 依存関係(apiコンテナよりdbコンテナが先に起動する)
+      - "db"
+    networks:
+      - backend
+  db:
+    image: mysql:5.7
+    volumes:
+      - type: volume
+        source: ./mysql
+        target: /var/lib/mysql
+      - type: bind
+        source: ./db
+        target: /docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_HOST: ${DB_ROOT_HOST}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${DB_PASS}
+      TZ: ${TZ}
+    networks:
+      - backend
+networks:
+  backend:
+volumes:
+  mysql:
