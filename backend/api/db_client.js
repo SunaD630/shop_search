@@ -10,6 +10,7 @@ function connectMYSQL(){
         user: env.MYSQL_USER,
         password: env.MYSQL_ROOT_PASSWORD,
         database: env.MYSQL_DATABASE,
+        multipleStatements: true
     });
     connection.connect((err) => {
     if (err) {

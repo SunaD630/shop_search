@@ -3,7 +3,6 @@
 const express = require('express');
 const router = express.Router();
 const connection = require('../db_client');
-const { Sequelize } = require('sequelize');
 const axios = require('axios');
 require('dotenv').config();
 
@@ -15,16 +14,6 @@ const config = {
     headers: {'X-API-KEY' : env.RESAS_API_KEY}
 };
 
-// const sequelize = new Sequelize(
-//     env.MYSQL_DATABASE, 
-//     env.MYSQL_USER, 
-//     env.MYSQL_ROOT_PASSWORD, 
-//     {
-//         host: 'db', 
-//         dialect: 'mysql',
-//     }
-// );
-
 async function setPrefArr(data){
     var pref_arr = [];
     data.forEach(pref => {
@@ -33,26 +22,6 @@ async function setPrefArr(data){
     return pref_arr;
 }
 
-router.get('/', async function(req,res){
-    res.setHeader('Access-Control-Allow-Headers','Content-Type',);
-    res.setHeader('Access-Control-Allow-Origin','http://localhost:8000');
-    res.setHeader('Access-Control-Allow-Methods','OPTIONS,POST,GET');
-    res.setHeader('Access-Control-Allow-Credentials', true);
-    connection.query("insert into usr set ?",{user_id: 2,user_name:'Tanaka',password:'12345',email:'tanaka@gmail.com'},function(error,results,fields){
-        if (error) throw error;
-        console.log(results);
-    });
-    // connection.query('select * from usr', function(err, usr){
-    //     if (err) throw err;
-    //     console.log(usr); // queryの結果が返ってくる
-    // });
-    // try{
-    //     await sequelize.authenticate();
-    //     console.log('Connection has been established successfully.');
-    // }catch(error){
-    //     console.error('Unable to connect to the database:', error);
-    // }
-})
 
 router.get('/prefectures', function(req, res, next) {
     res.setHeader('Access-Control-Allow-Headers','Content-Type',);
@@ -94,6 +63,17 @@ router.post('/register', function(req,res){
   res.setHeader('Access-Control-Allow-Origin','http://localhost:8000');
   res.setHeader('Access-Control-Allow-Methods','OPTIONS,POST,GET');
   res.setHeader('Access-Control-Allow-Credentials', true);
+  const user_data = req.body;
+  console.log(user_data);
+  const q = "select count(*) into @userNum from usr;select @userNum + 1; insert into usr values(@userNum + 1,?,?,?);";
+  connection.query(
+    q,[user_data.name,user_data.password,user_data.email],(error,results) => {
+      if (error) throw error;
+      console.log(results);
+    }
+  )
+  res.send("OK");
+  res.end();
 })
 
 module.exports = router;

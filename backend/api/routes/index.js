@@ -1,18 +1,11 @@
 'use strict';
 
 const express = require('express');
-var router = express.Router();
-// Constants
-const PORT = 8080;
-const HOST = '0.0.0.0';
+const router = express.Router();
+const connection = require('../db_client');
+const axios = require('axios');
+require('dotenv').config();
 
 
-router.get('/', (req, res) => {
-  res.send('Hello World!');
-});
-
-// app.listen(PORT, HOST, () => {
-//   console.log(`Running on http://${HOST}:${PORT}`);
-// });
 
 module.exports = router;

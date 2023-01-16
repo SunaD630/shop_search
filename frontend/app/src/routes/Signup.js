@@ -2,14 +2,14 @@ import React, {useState, useEffect} from 'react';
 import {useNavigate} from "react-router-dom";
 import {useForm, SubmitHandler} from "react-hook-form";
 import axios from 'axios';
-
+import "../App.css"
 function Signup() {
   const navigate = useNavigate()
   const [prefectures, setPrefectures] = useState([]);
   const {register, setValue, handleSubmit} = useForm();
 
   const config = {
-    url: "http://localhost:3000/users",
+    url: "http://localhost:3000/users/prefectures",
     method: "GET",
     headers: {
       'Content-Type': "application/json"
@@ -19,7 +19,6 @@ function Signup() {
   useEffect(() => {
     axios(config)
     .then(response => {
-        // console.log(response);
         setPrefectures(response.data.prefectures);      
     })
     .catch(() => {
@@ -44,7 +43,7 @@ function Signup() {
       .post("http://localhost:3000/users/register",JSON.stringify(data),{headers: {'Content-Type': 'application/json'}},{withCredentials: true})
       .then(() => {
           console.log("succeed to submit");
-          navigate("/home");
+          navigate("/home",{state: data});
         }
       )
       .catch(() => {
@@ -81,6 +80,9 @@ function Signup() {
       <br/>
       <label>メール</label>
       <input type="email" {...register("email")}/>
+      <br/>
+      <label>パスワード</label>
+      <input type="password" {...register("password")}/>
       <br/>
       <input type="submit" value="送信"/>
         </form>
