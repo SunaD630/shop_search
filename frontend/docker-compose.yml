@@ -1,0 +1,13 @@
+version: '3' 
+
+services:
+  front-app:
+    container_name: front-app
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    volumes:
+      - ./app:/app
+    command: sh -c "npm install && npm start"
+    ports:
+      - '8000:8000'
