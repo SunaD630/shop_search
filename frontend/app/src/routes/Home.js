@@ -7,7 +7,8 @@ export function Home() {
   const navigate = useNavigate();
   const { register, setValue, handleSubmit } = useForm();
   const location = useLocation();
-  const user_data = location.state;
+  const user_data = location.state.user_data;
+  const user_id = location.state.user_id;
   const url = "http://localhost:3000/shops/search";
   const config = {
       headers: {
@@ -19,7 +20,14 @@ export function Home() {
       .post(url,data,config,{withCredentials: true})
       .then((response) => {
           console.log("response:",response.data);
-          navigate("/search",{state: response.data});
+          navigate("/search",
+            {state: 
+              {
+                'shop_list': response.data,
+                'user_id': user_id
+              }
+            }
+          );
       })
       .catch(() => {
           console.log("cannot search");

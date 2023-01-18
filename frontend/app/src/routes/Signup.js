@@ -2,9 +2,10 @@ import React, {useState, useEffect} from 'react';
 import {useNavigate} from "react-router-dom";
 import {useForm, SubmitHandler} from "react-hook-form";
 import axios from 'axios';
-import "../App.css"
+import "../App.css";
+
 function Signup() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [prefectures, setPrefectures] = useState([]);
   const {register, setValue, handleSubmit} = useForm();
 
@@ -41,9 +42,9 @@ function Signup() {
   function registerUser(data){
       axios
       .post("http://localhost:3000/users/register",JSON.stringify(data),{headers: {'Content-Type': 'application/json'}},{withCredentials: true})
-      .then(() => {
-          console.log("succeed to submit");
-          navigate("/home",{state: data});
+      .then(response => {
+          console.log("response: "+ response.data);
+          navigate("/home",{state: {'user_data': data, 'user_id': response.data}});
         }
       )
       .catch(() => {
@@ -84,7 +85,7 @@ function Signup() {
       <label>パスワード</label>
       <input type="password" {...register("password")}/>
       <br/>
-      <input type="submit" value="送信"/>
+      <input type="submit" value="登録"/>
         </form>
       </div>
       );

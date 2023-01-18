@@ -58,7 +58,7 @@ router.options('/register', function(req,res){
   res.end();
 })
 
-router.post('/register', function(req,res){
+router.post('/register', function(req,res){ // フロントからのユーザー情報をDBに登録、user_idを返す
   res.setHeader('Access-Control-Allow-Headers','Content-Type',);
   res.setHeader('Access-Control-Allow-Origin','http://localhost:8000');
   res.setHeader('Access-Control-Allow-Methods','OPTIONS,POST,GET');
@@ -68,12 +68,14 @@ router.post('/register', function(req,res){
   const q = "select count(*) into @userNum from usr;select @userNum + 1; insert into usr values(@userNum + 1,?,?,?);";
   connection.query(
     q,[user_data.name,user_data.password,user_data.email],(error,results) => {
-      if (error) throw error;
-      console.log(results);
+      if(error){
+          throw error;
+      }else{
+          console.log(Object.values(results[1][0])[0]);
+          res.json(Object.values(results[1][0])[0]);
+      }
     }
   )
-  res.send("OK");
-  res.end();
 })
 
 module.exports = router;

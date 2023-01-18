@@ -41,6 +41,7 @@ const createShopList = (shop_data,area_code) => { // 店データAPIを叩く、
         var shop_info = [];
         shop_list.forEach(shop => {
             shop_info.push({
+              'id': shop.id,
               'name': shop.name,
               'logo_image': shop.logo_image,
               'URL': shop.urls.pc,
@@ -79,20 +80,42 @@ router.options('/register',function(req,res){
   res.send("OPTIONS OK");
   res.end();
 })
-router.post('/register',function(req,res){
+router.post('/register',function(req,res){// フロントからuser_idと店がJSONで送られる　これをDBに登録
   res.setHeader('Access-Control-Allow-Headers','Content-Type',);
   res.setHeader('Access-Control-Allow-Origin','http://localhost:8000');
   res.setHeader('Access-Control-Allow-Methods','OPTIONS,POST,GET');
   res.setHeader('Access-Control-Allow-Credentials', true);
-  console.log(req.body);
-  const q = "select count(*) into @areaNum from Shop; insert into Area values(@areaNum + 1,?,?);select @areaNum + 1; ";
-  connection.query(
-    q,["0000",req.body.mid_area_code],(error,results) => {
-      console.log(results[2]);
-      console.log(error);
-      console.log("エリア登録済み");
-    }
-  )
+  const user_id = req.body.user_id;
+  const shop_info = req.body.shop;
+  const area_url = "http://webservice.recruit.co.jp/hotpepper/middle_area/v1/";
+  const config = {
+    'key': env.HOTPEPPER_API_KEY,
+    'middle_area': shop_info.mid_area_code,
+    'format': 'json'
+  }
+  axios.get(area_url,{params:config})
+  .then(function(response){  
+    const area_q = "insert into area values(?,?,?);";
+    const shop_q = "insert into shop values(?,?,?,?,?);";
+    connection.query(
+      area_q,[user_id,shop_info.mid_area_code,response.data.results.middle_area[0].name],(error,results) => {
+        if(error){
+          throw error;
+        }else{
+          console.log("エリア登録済み");
+        }
+      }
+    )
+    connection.query(
+      shop_q,[shop_info.id, user_id, shop_info.mid_area_code, shop_info.name, shop_info.URL],(error,results)=>{
+        if(error){
+          throw error;
+        }else{
+          console.log("店舗登録済み");
+        }
+      }
+    )
+  })
   res.end();
 })
 
