@@ -40,14 +40,14 @@ router.get('/prefectures', function(req, res, next) {
         console.log("connect failed");
     });
 });
-router.options('/prefectures',function(req,res){
-  res.setHeader('Access-Control-Allow-Headers','Content-Type',);
-  res.setHeader('Access-Control-Allow-Origin','http://localhost:8000');
-  res.setHeader('Access-Control-Allow-Methods','OPTIONS,POST,GET');
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  res.send("OPTIONS OK");
-  res.end();
-})
+// router.options('/prefectures',function(req,res){
+//   res.setHeader('Access-Control-Allow-Headers','Content-Type',);
+//   res.setHeader('Access-Control-Allow-Origin','http://localhost:8000');
+//   res.setHeader('Access-Control-Allow-Methods','OPTIONS,POST,GET');
+//   res.setHeader('Access-Control-Allow-Credentials', true);
+//   res.send("OPTIONS OK");
+//   res.end();
+// })
 
 router.options('/register', function(req,res){
   res.setHeader('Access-Control-Allow-Headers','Content-Type',);
@@ -58,7 +58,7 @@ router.options('/register', function(req,res){
   res.end();
 })
 
-router.post('/register', function(req,res){ // フロントからのユーザー情報をDBに登録、user_idを返す
+router.post('/register', async function(req,res){ // フロントからのユーザー情報をDBに登録、user_idを返す
   res.setHeader('Access-Control-Allow-Headers','Content-Type',);
   res.setHeader('Access-Control-Allow-Origin','http://localhost:8000');
   res.setHeader('Access-Control-Allow-Methods','OPTIONS,POST,GET');
@@ -66,6 +66,7 @@ router.post('/register', function(req,res){ // フロントからのユーザー
   const user_data = req.body;
   console.log(user_data);
   const q = "select count(*) into @userNum from usr;select @userNum + 1; insert into usr values(@userNum + 1,?,?,?);";
+
   connection.query(
     q,[user_data.name,user_data.password,user_data.email],(error,results) => {
       if(error){
@@ -77,5 +78,37 @@ router.post('/register', function(req,res){ // フロントからのユーザー
     }
   )
 })
+
+router.options('/signin', function(req,res){
+    res.setHeader('Access-Control-Allow-Headers','Content-Type',);
+    res.setHeader('Access-Control-Allow-Origin','http://localhost:8000');
+    res.setHeader('Access-Control-Allow-Methods','OPTIONS,POST,GET');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    res.send("OPTIONS OK");
+    res.end();
+  })
+  
+  router.post('/signin', async function(req,res){ // フロントからのサインイン情報がDBにあるかを返す
+    res.setHeader('Access-Control-Allow-Headers','Content-Type',);
+    res.setHeader('Access-Control-Allow-Origin','http://localhost:8000');
+    res.setHeader('Access-Control-Allow-Methods','OPTIONS,POST,GET');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    const user_data = req.body;
+    console.log(user_data);
+    const q = "select * from usr where email = ? and password = ?;"; 
+  
+    connection.query(
+      q,[user_data.email,user_data.password],(error,results) => {
+        if(error){
+            throw error;
+        }else{
+            // console.log(Object.values(results[1][0])[0]);
+            // res.json(Object.values(results[1][0])[0]);
+            console.log(results);
+            res.json(results);
+        }
+      }
+    )
+  })
 
 module.exports = router;

@@ -44,7 +44,7 @@ function Signup() {
       .post("http://localhost:3000/users/register",JSON.stringify(data),{headers: {'Content-Type': 'application/json'}},{withCredentials: true})
       .then(response => {
           console.log("response: "+ response.data);
-          navigate("/home",{state: {'user_data': data, 'user_id': response.data}});
+          navigate("/home",{state: {'user_name': data.name, 'user_id': response.data}});
         }
       )
       .catch(() => {

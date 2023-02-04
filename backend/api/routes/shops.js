@@ -95,8 +95,8 @@ router.post('/register',function(req,res){// フロントからuser_idと店がJ
   }
   axios.get(area_url,{params:config})
   .then(function(response){  
-    const area_q = "insert into area values(?,?,?);";
-    const shop_q = "insert into shop values(?,?,?,?,?);";
+    const area_q = "insert ignore into area values(?,?,?);";
+    const shop_q = "insert ignore into shop values(?,?,?,?,?);";
     connection.query(
       area_q,[user_id,shop_info.mid_area_code,response.data.results.middle_area[0].name],(error,results) => {
         if(error){

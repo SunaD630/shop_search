@@ -16,8 +16,9 @@
       "express": "~4.16.0",
       "http-errors": "~1.6.2",
       "morgan": "~1.9.0",
-      "mysql2": "~3.0.1",
+      "mysql": "~2.18.1",
       "pg": "*",
-      "sequelize": "~6.28.0"
+      "sequelize": "~6.28.0",
+      "util": "0.12.5"
     }
   }
