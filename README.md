@@ -29,3 +29,11 @@ https://user-images.githubusercontent.com/103047154/216800401-176c08d9-d7a6-463b
 
 検索&登録
 
+https://user-images.githubusercontent.com/103047154/216802946-f56b53d5-7035-4c89-8138-342f832c84ce.mov
+
+## how to build
+frontend, backendディレクトリ内でそれぞれ以下を実行
+```
+docker-compose up --build
+```
+実行したら`http://localhost:8000`を開く
