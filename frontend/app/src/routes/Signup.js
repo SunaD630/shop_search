@@ -58,7 +58,7 @@ function Signup() {
     return (
       <div>
         <h1>新規登録画面</h1>
-      <p>ユーザー情報を入力</p>
+      <p>個人情報を入力</p>
       <form action="home" onSubmit={handleSubmit(onSubmit)}>
         <label>名前</label>
         <input type="text" {...register("name")} placeholder="Your name" />

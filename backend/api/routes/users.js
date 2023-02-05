@@ -102,8 +102,6 @@ router.options('/signin', function(req,res){
         if(error){
             throw error;
         }else{
-            // console.log(Object.values(results[1][0])[0]);
-            // res.json(Object.values(results[1][0])[0]);
             console.log(results);
             res.json(results);
         }

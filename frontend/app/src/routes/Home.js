@@ -65,9 +65,9 @@ export function Home() {
     return(
         <>
         <div>
-            <h1>ホーム</h1>
+            <h1>{user_name}さんのホーム</h1>
             <form action="search" onSubmit={handleSubmit(onSubmit)}>
-                <label>{user_name}さん</label>
+                <h1>保存した店</h1>
                 {areas.map((area, index) => {
                     return(
                         <div>
@@ -76,13 +76,14 @@ export function Home() {
                             return(
                                 <div>
                                 <label>{shop.shop_name}</label>
+                                <a href={shop.shop_link}>お店のリンク</a>
                                 </div>
                             )
                         })}
                         </div>
                     )
                 })}
-                <h2>店を検索</h2>
+                <h1>店を検索</h1>
                 <label>店名</label>
                 <input type="text" {...register("name")} />
                 <label>エリア名</label>
